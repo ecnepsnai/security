@@ -7,16 +7,11 @@ import (
 	"crypto/cipher"
 	"fmt"
 	"io/ioutil"
-
-	"golang.org/x/crypto/scrypt"
 )
 
 // Decrypt decrypt the given data with the provided passphrase
 func Decrypt(data []byte, passphrase string) ([]byte, error) {
-	key, err := scrypt.Key([]byte(passphrase), nil, 32768, 8, 1, 32)
-	if err != nil {
-		return nil, err
-	}
+	key := HashKey(passphrase)
 
 	r := bufio.NewReader(bytes.NewReader(data))
 	nonce, err := r.ReadBytes('$')

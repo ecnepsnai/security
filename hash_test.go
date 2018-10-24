@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var userPassword = "hunter1"
+var userPassword = "hunter2"
 
 func TestHashPassword(t *testing.T) {
 	password := HashPassword(userPassword)
@@ -19,6 +19,15 @@ func TestHashPassword(t *testing.T) {
 	}
 	if password.String() == userPassword {
 		t.Error("String value of password was plain-text user password")
+		t.Fail()
+	}
+}
+
+func TestHashKey(t *testing.T) {
+	key := HashKey(userPassword)
+	length := len(key)
+	if length != 32 {
+		t.Errorf("Incorrect key length. Expected 32 got %d", length)
 		t.Fail()
 	}
 }

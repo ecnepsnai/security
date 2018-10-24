@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/crypto/scrypt"
 )
 
 // BCryptHash represents a BCrypt hash string
@@ -14,6 +15,12 @@ type BCryptHash string
 func HashPassword(raw string) BCryptHash {
 	hash, _ := bcrypt.GenerateFromPassword([]byte(raw), bcrypt.DefaultCost)
 	return BCryptHash(hash)
+}
+
+// HashKey hash a string sutible for a AES-256 key (32 bytes)
+func HashKey(raw string) []byte {
+	key, _ := scrypt.Key([]byte(raw), nil, 32768, 8, 1, 32)
+	return key
 }
 
 // HashString generates a SHA265 hexedecimal hash for the given string
