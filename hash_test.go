@@ -1,7 +1,6 @@
 package security
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -29,27 +28,6 @@ func TestHashKey(t *testing.T) {
 	if length != 32 {
 		t.Errorf("Incorrect key length. Expected 32 got %d", length)
 		t.Fail()
-	}
-}
-
-// Hash a password
-func ExampleHashPassword() {
-	plainTextPassword := "hunter2"
-	password := HashPassword(plainTextPassword)
-
-	// BCryptHash is just a string type with some methods attached to it
-	fmt.Printf("Hash: %s\n", password.String())
-}
-
-// Compare a plain-text password with the BCrypt hash
-func ExampleBCryptHash_Compare() {
-	passwordHash := BCryptHash("...")
-	plainTextPassword := "hunter2"
-
-	if passwordHash.Compare(plainTextPassword) {
-		// Password was correct
-	} else {
-		// Password was incorrect
 	}
 }
 

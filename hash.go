@@ -8,13 +8,13 @@ import (
 	"golang.org/x/crypto/scrypt"
 )
 
-// BCryptHash represents a BCrypt hash string
-type BCryptHash string
+// HashedPassword represents a hash string
+type HashedPassword string
 
-// HashPassword generates a BCrypt hash for the given string
-func HashPassword(raw string) BCryptHash {
+// HashPassword generates a hash for the given string
+func HashPassword(raw string) HashedPassword {
 	hash, _ := bcrypt.GenerateFromPassword([]byte(raw), bcrypt.DefaultCost)
-	return BCryptHash(hash)
+	return HashedPassword(hash)
 }
 
 // HashKey hash a string sutible for a AES-256 key (32 bytes)
@@ -31,12 +31,12 @@ func HashString(raw string) string {
 	return sha
 }
 
-// Compare compares a raw string with a provided BCrypt hash
-func (hash BCryptHash) Compare(raw string) bool {
+// Compare compares a raw string with a provided hash
+func (hash HashedPassword) Compare(raw string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(raw)) == nil
 }
 
 // String returns the hash string representation
-func (hash BCryptHash) String() string {
+func (hash HashedPassword) String() string {
 	return string(hash)
 }
