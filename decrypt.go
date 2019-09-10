@@ -14,16 +14,14 @@ func Decrypt(data []byte, passphrase string) ([]byte, error) {
 	key := HashKey(passphrase)
 
 	r := bufio.NewReader(bytes.NewReader(data))
-	nonce, err := r.ReadBytes('$')
+	nonce := make([]byte, 12)
+	n, err := r.Read(nonce)
 	if err != nil {
 		return nil, err
 	}
-	if nonce == nil {
+	if n < 12 {
 		return nil, fmt.Errorf("Invalid data")
 	}
-
-	// Remove delimiter
-	nonce = nonce[:len(nonce)-1]
 
 	ciphertext, err := ioutil.ReadAll(r)
 	if err != nil {

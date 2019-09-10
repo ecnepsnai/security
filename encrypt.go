@@ -31,7 +31,6 @@ func Encrypt(data []byte, passphrase string) ([]byte, error) {
 
 	var writer bytes.Buffer
 	writer.Write(nonce)
-	writer.Write([]byte("$"))
 	writer.Write(ciphertext)
 
 	return writer.Bytes(), nil

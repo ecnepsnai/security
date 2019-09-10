@@ -21,7 +21,7 @@ func TestEncrypt(t *testing.T) {
 }
 
 func TestDecrypt(t *testing.T) {
-	encryptedBytes, err := hex.DecodeString("ffbfc29be0532922c24cd71a24e56a0e5a7363247cd9629572d73007010f3d9ae3a069e964c54b728b")
+	encryptedBytes, err := hex.DecodeString("44d63abe175b07c5673690b45a2d12eaf2318965a16ac1a3245a15073b25f68fa91719ab0ecfd961")
 	if err != nil {
 		t.Errorf("Invalid encrypted bytes: %s", err.Error())
 		t.Fail()
