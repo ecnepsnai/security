@@ -6,9 +6,8 @@ import (
 	mrand "math/rand"
 )
 
-// SecureRandom generate random bytes of specified length.
-// Sutible for cryptographical use.
-func SecureRandom(length uint16) []byte {
+// RandomBytes generate random bytes of specified length. Sutible for cryptographical use.
+func RandomBytes(length uint16) []byte {
 	randB := make([]byte, length)
 	rand.Read(randB)
 	return randB
@@ -23,5 +22,5 @@ func RandomNumber(min int, max int) int {
 // RandomString generate a random string (hex characters) with the length of random entropy. Returned string will be around 2* longer than `length`.
 // Sutible for cryptographical use.
 func RandomString(length uint16) string {
-	return hex.EncodeToString(SecureRandom(length))
+	return hex.EncodeToString(RandomBytes(length))
 }

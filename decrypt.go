@@ -9,9 +9,9 @@ import (
 	"io/ioutil"
 )
 
-// Decrypt decrypt the given data with the provided passphrase
+// Decrypt will decrypt the specified encrypted data with the given passphrase.
 func Decrypt(data []byte, passphrase string) ([]byte, error) {
-	key := HashKey(passphrase)
+	key := PassphraseToEncryptionKey(passphrase)
 
 	r := bufio.NewReader(bytes.NewReader(data))
 	nonce := make([]byte, 12)

@@ -1,15 +1,18 @@
-package security
+package security_test
 
 import (
 	"encoding/hex"
-	"fmt"
 	"testing"
+
+	"github.com/ecnepsnai/security"
 )
 
 func TestEncrypt(t *testing.T) {
+	t.Parallel()
+
 	data := []byte("Hello world!")
 	passphrase := "hunter1"
-	encryptedBytes, err := Encrypt(data, passphrase)
+	encryptedBytes, err := security.Encrypt(data, passphrase)
 	if err != nil {
 		t.Errorf("Error encrypting bytes: %s", err.Error())
 		t.Fail()
@@ -21,6 +24,8 @@ func TestEncrypt(t *testing.T) {
 }
 
 func TestDecrypt(t *testing.T) {
+	t.Parallel()
+
 	encryptedBytes, err := hex.DecodeString("44d63abe175b07c5673690b45a2d12eaf2318965a16ac1a3245a15073b25f68fa91719ab0ecfd961")
 	if err != nil {
 		t.Errorf("Invalid encrypted bytes: %s", err.Error())
@@ -32,7 +37,7 @@ func TestDecrypt(t *testing.T) {
 	}
 	passphrase := "hunter1"
 
-	decryptedBytes, err := Decrypt(encryptedBytes, passphrase)
+	decryptedBytes, err := security.Decrypt(encryptedBytes, passphrase)
 	if err != nil {
 		t.Errorf("Error decrypting bytes: %s", err.Error())
 		t.Fail()
@@ -50,6 +55,8 @@ func TestDecrypt(t *testing.T) {
 }
 
 func TestDecryptIncorrectPassphrase(t *testing.T) {
+	t.Parallel()
+
 	encryptedBytes, err := hex.DecodeString("ffbfc29be0532922c24cd71a24e56a0e5a7363247cd9629572d73007010f3d9ae3a069e964c54b728b")
 	if err != nil {
 		t.Errorf("Invalid encrypted bytes: %s", err.Error())
@@ -61,7 +68,7 @@ func TestDecryptIncorrectPassphrase(t *testing.T) {
 	}
 	passphrase := "not correct :("
 
-	decryptedBytes, err := Decrypt(encryptedBytes, passphrase)
+	decryptedBytes, err := security.Decrypt(encryptedBytes, passphrase)
 	if err == nil {
 		t.Errorf("No error seen decrypting bytes with incorrect passphrase")
 		t.Fail()
@@ -70,31 +77,4 @@ func TestDecryptIncorrectPassphrase(t *testing.T) {
 		t.Errorf("Decrypted bytes returned with incorrect passphrase")
 		t.Fail()
 	}
-}
-
-// Encrypt data using a string passphrase
-func ExampleEncrypt() {
-	data := []byte("Hello world!")
-	passphrase := "hunter1"
-	encryptedBytes, err := Encrypt(data, passphrase)
-	if err != nil {
-		// Encryption failed for some reason
-	}
-
-	// Encrypted bytes is not in ASCII, you should convert it to
-	// hex if you plan to store it as a string
-	hex.EncodeToString(encryptedBytes)
-}
-
-func ExampleDecrypt() {
-	encryptedBytes := []byte{}
-	passphrase := "hunter1"
-
-	decryptedBytes, err := Decrypt(encryptedBytes, passphrase)
-	if err != nil {
-		// Decryption failed, password was incorrect?
-	}
-
-	// Do something with the decrypted bytes
-	fmt.Printf("Decrypted bytes: '%s'", decryptedBytes)
 }

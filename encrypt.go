@@ -8,9 +8,10 @@ import (
 	"io"
 )
 
-// Encrypt encrypt the given data with the provided passphrase
+// Encrypt will encrypt the given data using AES-256-GCM with the given passphrase. The passphrase can be a
+// user provided value (meaning it does not need to be 32 bytes).
 func Encrypt(data []byte, passphrase string) ([]byte, error) {
-	key := HashKey(passphrase)
+	key := PassphraseToEncryptionKey(passphrase)
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
