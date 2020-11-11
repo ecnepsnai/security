@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"runtime"
+	"time"
 
 	"golang.org/x/crypto/argon2"
 	"golang.org/x/crypto/bcrypt"
@@ -23,13 +24,16 @@ const (
 	HashingAlgorithmArgon2id = HashingAlgorithm("2")
 )
 
-// HashPassword returns a hashed representation of the provided password that is sutible for storage. Current algoritm
+// FailDelay how long to sleep when an incorrect password was detected. Defaults to 3 seconds.
+var FailDelay = 3 * time.Second
+
+// HashPassword returns a hashed representation of the provided password that is suitable for storage. Current algorithm
 // used is Argon2ID.
 func HashPassword(password []byte) (*HashedPassword, error) {
 	return HashPasswordAlgorithm(password, HashingAlgorithmArgon2id)
 }
 
-// HashPasswordAlgorithm returns a hashed representation of the provided password that is sutible for storage using the
+// HashPasswordAlgorithm returns a hashed representation of the provided password that is suitable for storage using the
 // given hashing algorithm.
 func HashPasswordAlgorithm(password []byte, alg HashingAlgorithm) (*HashedPassword, error) {
 	var hash []byte
@@ -83,11 +87,19 @@ func compareArgon2id(hash, password []byte) bool {
 	hex.Decode(hashData, hashHexData)
 
 	result := argon2.IDKey(password, hashSalt, 1, 64*1024, getThreads(), 32)
-	return bytes.Equal(result, hashData)
+	match := bytes.Equal(result, hashData)
+	if !match && FailDelay > 0 {
+		time.Sleep(FailDelay)
+	}
+	return match
 }
 
 func compareBCrypt(hash, password []byte) bool {
-	return bcrypt.CompareHashAndPassword(hash[2:], password) == nil
+	match := bcrypt.CompareHashAndPassword(hash[2:], password) == nil
+	if !match && FailDelay > 0 {
+		time.Sleep(FailDelay)
+	}
+	return match
 }
 
 // Algorithm get the algorithm used for this hashed password.
@@ -100,10 +112,11 @@ func (p HashedPassword) Algorithm() HashingAlgorithm {
 		return HashingAlgorithmArgon2id
 	}
 
-	return HashingAlgorithm("-1")
+	panic(fmt.Sprintf("Unknown hashing algorithm %b", alg))
 }
 
 // Compare does password match the hashed password. Returns true if matched.
+// If false, will sleep for the duration specified by FailDelay.
 func (p HashedPassword) Compare(password []byte) bool {
 	switch p.Algorithm() {
 	case HashingAlgorithmBCrypt:
