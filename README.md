@@ -1,3 +1,11 @@
+# Important: Package Deprecated
+
+This page is deprecated and has been replaced with github.com/ecnepsnai/secutil
+
+Release v1.0.0 is compatible with this packages API.
+
+---
+
 # Security
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/ecnepsnai/security?style=flat-square)](https://goreportcard.com/report/github.com/ecnepsnai/security)
